@@ -9,6 +9,10 @@
     -fx-background-position: center center;
 }
 
+.grid-pane-white {
+    -fx-background-color: white;
+}
+
 /*
     Contenido de la caja
  */
