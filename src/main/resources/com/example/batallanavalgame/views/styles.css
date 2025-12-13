@@ -1,31 +1,19 @@
-
-/*
-    Fondo Global
- */
+/* Fondo Global */
 .main-background {
-   -fx-background-image: url("../images/img.png");
+    -fx-background-image: url("../images/img.png");
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
 }
 
-.grid-pane-white {
-    -fx-background-color: white;
-}
-
-/*
-    Contenido de la caja
- */
+/* Caja de contenido */
 .content-box {
     -fx-background-color: rgba(0,0,0,0.55);
     -fx-padding: 30px;
     -fx-background-radius: 15px;
 }
 
-/*
-    Topografia
- */
-
+/* Títulos */
 .title {
     -fx-text-fill: white;
     -fx-font-size: 48px;
@@ -42,9 +30,8 @@
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
 }
-/*
-    Botones
- */
+
+/* Estilo de los botones */
 .menu-button {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
@@ -53,8 +40,10 @@
     -fx-pref-width: 300px;
     -fx-padding: 15px;
     -fx-background-radius: 10px;
+    -fx-transition: background-color 0.3s ease; /* Suaviza la transición */
 }
 
 .menu-button:hover {
-    -fx-background-color: #17202A
+    -fx-background-color: #17202A;
 }
+
