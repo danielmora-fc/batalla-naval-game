@@ -1,57 +1,45 @@
 package com.example.batallanavalgame.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Barco {
     private String tipo;
-    private int size;//Si es de 1,2,3,4 celdas
+    private int size;
     private String orientacion;
     private int initialRow;
     private int initialCol;
     private int golpes = 0;
-    //Faltaria un atributo para las posiciones y tambien un metodo para asignarle posiciones
-    private List<int[]> posiciones = new ArrayList<int[]>();
 
-    public Barco(String tipo, int size, String orientacion, int initialRow, int initialCol) {this.tipo = tipo;
-        this.size = getSize(tipo);
+    // Constructor actualizado: ahora incluye el tamaño
+    public Barco(String tipo, int size, String orientacion, int initialRow, int initialCol) {
+        this.tipo = tipo;
+        this.size = size;  // Recibe el tamaño como un parámetro
         this.orientacion = orientacion;
         this.initialRow = initialRow;
         this.initialCol = initialCol;
     }
 
-    private int getSize(String tipo) {
+    // Método para obtener el tamaño según el tipo
+    public static int getSizeByTipo(String tipo) {
         switch (tipo) {
-            case "FRAGATA" -> {
-                return 1;
-            }
-            case "DESTRUCTOR" -> {
-                return 2;
-            }
-            case "SUBMARINO" -> {
-                return 3;
-            }
-            case "PORTAAVIONES" -> {
-                return 4;
-            }
-            default ->  {
-                return -1;
-            }
+            case "PORTAAVIONES": return 4;
+            case "SUBMARINO": return 3;
+            case "DESTRUCTOR": return 2;
+            case "FRAGATA": return 1;
+            default: return 0;
         }
     }
 
-    public void agregarGolpe() { golpes++; }
-    public boolean estaHundido() { return golpes >= size; }
+    public void agregarGolpe() {
+        golpes++;
+    }
 
-    //getters
+    public boolean estaHundido() {
+        return golpes >= size;
+    }
+
+    // Getters y Setters
     public String getTipo() { return tipo; }
     public int getSize() { return size; }
     public String getOrientacion() { return orientacion; }
     public int getInitialRow() { return initialRow; }
     public int getInitialCol() { return initialCol; }
-
-
-    public void setPosiciones(List<int[]> posiciones) {
-        this.posiciones = posiciones;
-    }
 }
