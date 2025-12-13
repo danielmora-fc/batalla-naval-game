@@ -1,6 +1,7 @@
 module com.example.batallanavalgame {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
 
 
     opens com.example.batallanavalgame to javafx.fxml;
