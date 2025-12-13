@@ -1,7 +1,6 @@
 package com.example.batallanavalgame;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,9 +8,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.Group;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -24,41 +20,13 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        AnchorPane root = new AnchorPane();
-
-        AnchorPane b1 = buildShip("PORTAAVIONES", 1);
-        b1.setLayoutY(0);
-        b1.setLayoutX(0);
-//        Pane b2 = buildShip("SUBMARINO", 3);
-
-        b1.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println(event.getSource() + " source");
-                System.out.println("X: "+event.getX()+" Y:"+event.getY());
-            }
-        });
-
-        root.getChildren().add(b1);
-//        root.getChildren().add(b2);
-        enableDrag(b1, root);
-//        enableDrag(b2, root);
-        enableRightClickRotate(b1, root);
-
-
-
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/com/example/batallanavalgame/views/menu.fxml"));
+        Parent root = loader.load();
 
         Scene scene = new Scene(root, 700, 700);
+        stage.setTitle("Batalla Naval");
         stage.setScene(scene);
         stage.show();
-
-//        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/com/example/batallanavalgame/views/menu.fxml"));
-//        Parent root = loader.load();
-//
-//        Scene scene = new Scene(root, 700, 700);
-//        stage.setTitle("Batalla Naval");
-//        stage.setScene(scene);
-//        stage.show();
 
 
 

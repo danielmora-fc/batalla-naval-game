@@ -6,41 +6,37 @@ import com.example.batallanavalgame.models.fabrica.IABarcoCreador;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public class Jugador {
+public class Jugador implements Serializable {
+    private static final long serialVersionUID = 1L;
     private boolean esHumano;
     private Tablero tablero;
     private List<Barco> flota;
-    private BarcoCreador creador;
+    private transient BarcoCreador creador;
 
     public Jugador(boolean esHumano) {
         this.esHumano = esHumano;
         this.tablero = new Tablero();
         this.flota = new ArrayList<>();
-
-        if(esHumano){
-            this.creador = new HumanoBarcoCreador();
-        } else {
-            this.creador = new IABarcoCreador();
-        }
+        ensureCreador();
     }
-    //Metodo auxiliar para evitar esribir mucho codigo
     private void agregar(String tipo) {
         Barco barco = creador.crearBarco(tipo, tablero);
-        flota.add(barco);
+        if (barco != null) flota.add(barco);
     }
 
     public void generarFlotaInicial() {
-        agregar("PORTAAVIONES");
-        agregar("SUBMARINO");
-        agregar("SUBMARINO");
-        agregar("DESTRUCTOR");
-        agregar("DESTRUCTOR");
-        agregar("DESTRUCTOR");
-        agregar("FRAGATA");
-        agregar("FRAGATA");
-        agregar("FRAGATA");
-        agregar("FRAGATA");
+        agregar("Portaaviones");
+        agregar("Submarino");
+        agregar("Submarino");
+        agregar("Destructor");
+        agregar("Destructor");
+        agregar("Destructor");
+        agregar("Fragata");
+        agregar("Fragata");
+        agregar("Fragata");
+        agregar("Fragata");
     }
 
     public int dispararA(Jugador enemigo, int fila, int col){
@@ -56,8 +52,30 @@ public class Jugador {
         return true;
     }
 
-    //Getters
     public boolean esHumano() { return esHumano; }
     public Tablero getTablero() { return tablero; }
     public List<Barco> getFlota() { return flota; }
+
+    public boolean colocarBarco(String tipo, int fila, int col, boolean horizontal) {
+        ensureCreador();
+        int size = Barco.getSizeByType(tipo);
+        if (tablero.estaLibre(fila, col, size, horizontal)) {
+            String orientacion = horizontal ? "HORIZONTAL" : "VERTICAL";
+            Barco barco = new Barco(tipo, size, orientacion, fila, col);
+            tablero.colocarBarco(barco, fila, col, horizontal);
+            flota.add(barco);
+            return true;
+        }
+        return false;
+    }
+
+    public void ensureCreador() {
+        if (this.creador == null) {
+            if (esHumano) {
+                this.creador = new HumanoBarcoCreador();
+            } else {
+                this.creador = new IABarcoCreador();
+            }
+        }
+    }
 }

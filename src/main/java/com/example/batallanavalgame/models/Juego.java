@@ -1,30 +1,41 @@
 package com.example.batallanavalgame.models;
 
-public class Juego {
+import java.io.Serializable;
+
+public class Juego implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Jugador humano;
     private Jugador maquina;
     private boolean turnoJugador;
     private boolean juegoTerminado;
+    private int hundidosHumano; // barcos hundidos por el humano
+    private int hundidosIA;     // barcos hundidos por la IA
+    private String nickname;
 
     public Juego(){
-        humano = new Jugador(true);
-        maquina = new Jugador(false);
-        //El humano inicia
-        turnoJugador = true;
-        juegoTerminado = false;
+        this(new Jugador(true), new Jugador(false));
     }
+
+    public Juego(Jugador humano, Jugador maquina){
+        this.humano = humano;
+        this.maquina = maquina;
+        this.turnoJugador = true;
+        this.juegoTerminado = false;
+        this.hundidosHumano = 0;
+        this.hundidosIA = 0;
+    }
+
     public void iniciarPartida() {
-        //Crear flota del humano
         humano.generarFlotaInicial();
-        //Crear flota de la IA, aqui coloca los barcos en el tablero
         maquina.generarFlotaInicial();
-        // reiniciar el juego
         juegoTerminado = false;
         turnoJugador = true;
+        hundidosHumano = 0;
+        hundidosIA = 0;
     }
 
     public void cambiarTurno() {
-        //Si era true, lo volvera false
         turnoJugador = !turnoJugador;
     }
 
@@ -39,8 +50,12 @@ public class Juego {
             resultado = maquina.dispararA(humano, fila, columna);
         }
 
-        //Despues de disparar se verifica si alguien gano
         verificarEstadoPartida();
+
+        if (resultado == 4) {
+            if (turnoJugador) hundidosHumano++;
+            else hundidosIA++;
+        }
 
         return resultado;
     }
@@ -54,9 +69,9 @@ public class Juego {
         }
     }
 
-    // getters
     public boolean esTurnoJugador() { return turnoJugador; }
     public boolean estaTerminado() { return juegoTerminado; }
+    public Jugador getJugador() { return humano; }
     public Jugador getHumano() { return humano; }
     public Jugador getMaquina() { return maquina; }
     public Jugador getGanador() {
@@ -71,4 +86,9 @@ public class Juego {
         }
         return null;
     }
+
+    public int getHundidosHumano() { return hundidosHumano; }
+    public int getHundidosIA() { return hundidosIA; }
+    public String getNickname() { return nickname; }
+    public void setNickname(String nickname) { this.nickname = nickname; }
 }

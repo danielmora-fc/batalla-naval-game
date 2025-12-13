@@ -1,11 +1,9 @@
 package com.example.batallanavalgame.models;
 
-import javafx.scene.control.Cell;
+import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Tablero {
+public class Tablero implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Celda[][] grid = new Celda[10][10];
 
@@ -14,6 +12,40 @@ public class Tablero {
             for(int j = 0; j < 10; j++) {
                 grid[i][j] = new Celda();
             }
+        }
+    }
+
+    public boolean estaLibre(int fila, int col, int size, boolean horizontal) {
+        for(int i = 0; i < size; i++) {
+            int f = fila;
+            int c = col;
+            if(horizontal) {
+                c = col + i;
+            } else {
+                f = fila + i;
+            }
+            if(f < 0 || f > 9 || c < 0 || c > 9) {
+                return false;
+            }
+            if(grid[f][c].getEstado() != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void colocarBarco(Barco barco, int fila, int col, boolean horizontal) {
+        int size = barco.getSize();
+        for(int i = 0; i < size; i++) {
+            int f = fila;
+            int c = col;
+            if(horizontal) {
+                c = col + i;
+            } else {
+                f = fila + i;
+            }
+            grid[f][c].setEstado(1);
+            grid[f][c].setBarco(barco);
         }
     }
 
@@ -98,5 +130,19 @@ public class Tablero {
         //Si el usuario selecciona una celda que ya se haya presionado simplemente la devuelve
         return estado;
 
+    }
+
+    public int[][] getGrid() {
+        int[][] gridInt = new int[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                gridInt[i][j] = grid[i][j].getEstado();
+            }
+        }
+        return gridInt;
+    }
+
+    public int getEstado(int f, int c) {
+        return grid[f][c].getEstado();
     }
 }

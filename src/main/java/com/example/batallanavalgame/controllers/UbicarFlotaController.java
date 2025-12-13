@@ -1,56 +1,119 @@
 package com.example.batallanavalgame.controllers;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import com.example.batallanavalgame.models.Juego;
+import com.example.batallanavalgame.models.Jugador;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import com.example.batallanavalgame.models.Barco;
-import com.example.batallanavalgame.models.Tablero;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.List;
 
 public class UbicarFlotaController {
+    @FXML private GridPane gridPane;
+    @FXML private Label lblBarcoActual;
+    @FXML private Button btnRotar;
+    @FXML private Button btnComenzar;
+
+    private Juego juego;
+    private Jugador jugador;
+    private boolean horizontal = true;
+    private int barcoActualIndex = 0;
+    private final List<String> barcosAcolocar = List.of("Portaaviones", "Submarino", "Submarino", "Destructor", "Destructor", "Destructor", "Fragata", "Fragata", "Fragata", "Fragata");
+
+    public void setJuego(Juego juego) {
+        this.juego = juego;
+        this.jugador = juego.getJugador();
+        inicializarTablero();
+        actualizarLabel();
+    }
+
+    private void inicializarTablero() {
+        gridPane.getChildren().clear();
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                Rectangle rect = new Rectangle(40, 40);
+                rect.setStroke(Color.BLACK);
+                rect.setFill(Color.LIGHTBLUE);
+                rect.setOnMouseClicked(this::handleCeldaClick);
+                gridPane.add(rect, j, i);
+            }
+        }
+    }
 
     @FXML
-    private GridPane gridPane;
+    private void handleRotar() {
+        horizontal = !horizontal;
+    }
 
-    private Tablero tablero;  // Asegúrate de que el tablero esté inicializado
+    @FXML
+    private void handleCeldaClick(MouseEvent event) {
+        if (barcoActualIndex >= barcosAcolocar.size()) return;
 
-    public void initialize() {
-        // Inicializa el tablero (puede ser un tablero vacío o con barcos precolocados)
-        this.tablero = new Tablero();
+        Rectangle rect = (Rectangle) event.getSource();
+        int col = GridPane.getColumnIndex(rect);
+        int row = GridPane.getRowIndex(rect);
 
-        // Añadir el evento de mouse a las celdas del grid
-        gridPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // Obtener la fila y columna donde se hizo clic
-                int fila = (int) event.getY() / 39;  // Asumiendo que cada celda tiene 39px
-                int columna = (int) event.getX() / 39;
+        String tipoBarco = barcosAcolocar.get(barcoActualIndex);
 
-                // Imprimir la fila y columna para verificar
-                System.out.println("Fila: " + fila + ", Columna: " + columna);
+        if (jugador.colocarBarco(tipoBarco, row, col, horizontal)) {
+            actualizarTablero();
+            barcoActualIndex++;
+            actualizarLabel();
+        }
+    }
 
-                // Lógica para colocar el barco en la celda seleccionada
-                // Este ejemplo usa un barco de tipo "SUBMARINO"
-                Barco barco = new Barco("SUBMARINO", 3, "HORIZONTAL", fila, columna);
-
-                // Intentar colocar el barco en el tablero
-                if (tablero.colocarBarco(barco)) {
-                    System.out.println("Barco colocado en Fila: " + fila + ", Columna: " + columna);
-                } else {
-                    System.out.println("No se puede colocar el barco en esta posición.");
+    private void actualizarTablero() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                Rectangle rect = (Rectangle) gridPane.getChildren().get(i * 10 + j);
+                if (jugador.getTablero().getEstado(i, j) == 1) {
+                    rect.setFill(Color.GRAY);
                 }
             }
-        });
+        }
+    }
+
+    private void actualizarLabel() {
+        if (lblBarcoActual != null) {
+            if (barcoActualIndex < barcosAcolocar.size()) {
+                lblBarcoActual.setText("Colocar: " + barcosAcolocar.get(barcoActualIndex));
+            } else {
+                lblBarcoActual.setText("Flota completa");
+                if (btnComenzar != null) {
+                    btnComenzar.setDisable(false);
+                }
+            }
+        }
     }
 
     @FXML
-    public void continuar(ActionEvent event) {
-        // Continuar con el juego después de colocar los barcos
+    private void handleComenzar() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/batallanavalgame/views/juego.fxml"));
+        Parent root = loader.load();
+        JuegoController controller = loader.getController();
+        controller.setJuego(juego);
+
+        Stage stage = (Stage) gridPane.getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML
-    public void verFlotaEnemiga(ActionEvent event) {
-        // Mostrar la flota del enemigo
+    private void continuar() throws IOException {
+        handleComenzar();
+    }
+
+    @FXML
+    private void verFlotaEnemiga() {
+        // TODO: Implement enemy fleet preview
     }
 }
