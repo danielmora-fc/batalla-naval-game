@@ -26,6 +26,7 @@ public class UbicarFlotaController {
     @FXML private Label lblBarcoActual;
     @FXML private Button btnRotar;
     @FXML private Button btnComenzar;
+    @FXML private Label lblOrientacion;
 
     private Juego juego;
     private Jugador jugador;
@@ -38,6 +39,7 @@ public class UbicarFlotaController {
         this.jugador = juego.getJugador();
         inicializarTablero();
         actualizarLabel();
+        actualizarOrientacion();
     }
 
     private void inicializarTablero() {
@@ -68,6 +70,7 @@ public class UbicarFlotaController {
         if (event.getButton() == MouseButton.SECONDARY) {
             horizontal = !horizontal;
             // Update preview after rotation
+            actualizarOrientacion();
             Rectangle rect = (Rectangle) event.getSource();
             int col = GridPane.getColumnIndex(rect);
             int row = GridPane.getRowIndex(rect);
@@ -179,6 +182,19 @@ public class UbicarFlotaController {
         }
     }
 
+    private void actualizarOrientacion() {
+        if (lblOrientacion != null) {
+            String texto;
+            if (horizontal) {
+                texto = "Horizontal";
+            } else {
+                texto = "Vertical";
+            }
+
+            lblOrientacion.setText("Orientación: " + texto + " --> (Haz click derecho para rotar el barco)");
+        }
+    }
+
     @FXML
     private void handleComenzar() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/batallanavalgame/views/juego.fxml"));
@@ -207,7 +223,8 @@ public class UbicarFlotaController {
         
         Label title = new Label("Mapa de la Flota Enemiga");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        
+
+        Rectangle[][] enemyCells = new Rectangle[10][10];
         GridPane enemyGrid = new GridPane();
         enemyGrid.setGridLinesVisible(true);
         enemyGrid.setStyle("-fx-border-color: black; -fx-border-width: 2;");
@@ -218,6 +235,7 @@ public class UbicarFlotaController {
                 Rectangle rect = new Rectangle(30, 30);
                 rect.setStroke(Color.BLACK);
                 rect.setFill(Color.LIGHTBLUE);
+                enemyCells[i][j] = rect;
                 enemyGrid.add(rect, j, i);
             }
         }
@@ -240,8 +258,11 @@ public class UbicarFlotaController {
                 }
                 
                 if (r >= 0 && r <= 9 && c >= 0 && c <= 9) {
+                    /*
                     Rectangle rect = (Rectangle) enemyGrid.getChildren().get(r * 10 + c);
                     rect.setFill(Color.DARKGRAY);
+                     */
+                    enemyCells[r][c].setFill(Color.DARKGRAY);
                 }
             }
         }
