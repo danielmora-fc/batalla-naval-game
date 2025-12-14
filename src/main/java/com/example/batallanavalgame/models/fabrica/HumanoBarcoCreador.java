@@ -13,7 +13,7 @@ public class HumanoBarcoCreador extends BarcoCreador {
         String orientacion = "HORIZONTAL";  // Este valor también debe ser elegido por el jugador
 
         // Obtener el tamaño del barco usando el tipo
-        int size = Barco.getSizeByTipo(tipo);
+        int size = Barco.getSizeByType(tipo);
 
         // Crear el barco con la información proporcionada
         Barco barco = new Barco(tipo, size, orientacion, fila, columna);

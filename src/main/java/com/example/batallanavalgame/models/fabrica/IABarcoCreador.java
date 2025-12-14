@@ -16,7 +16,7 @@ public class IABarcoCreador extends BarcoCreador {
             String orientacion = random.nextBoolean() ? "VERTICAL" : "HORIZONTAL";  // Orientación aleatoria
 
             // Obtener el tamaño del barco usando el tipo
-            int size = Barco.getSizeByTipo(tipo);
+            int size = Barco.getSizeByType(tipo);
 
             // Crear el barco con la orientación y las coordenadas generadas
             Barco barco = new Barco(tipo, size, orientacion, fila, columna);
