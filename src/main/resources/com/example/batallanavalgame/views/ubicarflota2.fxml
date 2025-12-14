@@ -16,6 +16,7 @@
          <children>
             <Label styleClass="title" text="Ubica Tu Flota" />
             <Label fx:id="lblBarcoActual" styleClass="subtitle" text="Colocar: Portaaviones" />
+            <Label fx:id="lblOrientacion" styleClass="subtitle" text="Orientación: Horizontal  --&gt; (Haz click derecho para rotar el barco)" />
             <GridPane fx:id="gridPane" alignment="CENTER" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="386.0" styleClass="grid-pane-white">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="39.0" />
