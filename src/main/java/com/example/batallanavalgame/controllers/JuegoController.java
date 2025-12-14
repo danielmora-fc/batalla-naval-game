@@ -66,6 +66,11 @@ public class JuegoController {
             }
             // If hit (res != 2), AI continues shooting
         }
+        
+        // Check if game ended after AI's turn
+        if (juego.estaTerminado()) {
+            showGameEndDialog();
+        }
     }
 
     private void drawBoards() {
@@ -136,8 +141,11 @@ public class JuegoController {
         alert.setHeaderText(null);
         
         String message;
+        String winnerName;
+        
         if (juego.getGanador() == juego.getHumano()) {
-            message = "¡Felicidades! Has ganado la batalla naval.";
+            winnerName = juego.getNickname() != null ? juego.getNickname() : "Jugador";
+            message = "¡Felicidades " + winnerName + "! Has ganado la batalla naval.";
         } else {
             message = "La IA ha ganado. Mejor suerte la próxima vez.";
         }

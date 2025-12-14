@@ -27,9 +27,6 @@ public class Main extends Application {
         stage.setTitle("Batalla Naval");
         stage.setScene(scene);
         stage.show();
-
-
-
     }
 
     public AnchorPane buildShip(String type, int orientation){
