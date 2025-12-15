@@ -10,7 +10,7 @@
   - Código: 2539841
 
 ## Video explicativo:
-- [link](https://drive.google.com/drive/folders/1frwlz_U583KgRoZE4WMk5Z1qAKTfD1gE?usp=sharing)
+- [Video explicativo](https://drive.google.com/drive/folders/1frwlz_U583KgRoZE4WMk5Z1qAKTfD1gE?usp=sharing)
 
 
 ## Descripción
