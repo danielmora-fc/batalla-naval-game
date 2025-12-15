@@ -3,8 +3,17 @@ package com.example.batallanavalgame.models.fabrica;
 import com.example.batallanavalgame.models.Barco;
 import com.example.batallanavalgame.models.Tablero;
 
+/**
+ * Creacion de barcos del humano
+ * Implementacion del factory method
+ */
 public class HumanoBarcoCreador extends BarcoCreador {
-
+    /**
+     * Crea un barco para el jugador utilizando los datos proporcionados
+     * @param tipo tipo de barco a crear
+     * @param tablero tablero donde se intentara colocar el barco
+     * @return el barco creado si pudo colocarse correctamente, o null si la posicion no es valida
+     */
     @Override
     public Barco crearBarco(String tipo, Tablero tablero) {
         // Lógica para crear barcos para el jugador humano

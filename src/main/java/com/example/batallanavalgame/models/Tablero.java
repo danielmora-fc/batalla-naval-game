@@ -2,11 +2,19 @@ package com.example.batallanavalgame.models;
 
 import java.io.Serializable;
 
+/**
+ * Representa el tablero en el juego batalla naval
+ * El tablero esta compuesto por una matriz de 10x10
+ */
 public class Tablero implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Celda[][] grid = new Celda[10][10];
 
+    /**
+     * Contructor del tablero
+     * Inicializa la matriz de celdas creando una celda vacia en cada posicion
+     */
     public Tablero() {
         for(int i = 0; i < 10; i++) {
             for(int j = 0; j < 10; j++) {
@@ -15,6 +23,14 @@ public class Tablero implements Serializable {
         }
     }
 
+    /**
+     * Verifica si el barco puede colocarse en una posicion especifica del tablero
+     * @param fila fila inicial donde se intenta colocar el barco
+     * @param col columna inicial donde se intenta colocar el barco
+     * @param size Tamaño del barco a colocar.
+     * @param horizontal Indica si el barco se coloca horizontalmente.
+     * @return true si el espacio está libre y el barco cabe en el tablero y false en caso contrario
+     */
     public boolean estaLibre(int fila, int col, int size, boolean horizontal) {
         for(int i = 0; i < size; i++) {
             int f = fila;
@@ -34,6 +50,13 @@ public class Tablero implements Serializable {
         return true;
     }
 
+    /**
+     * Coloca un barco en el tablero en una posición y orientación específicas.
+     * @param barco Barco que se va a colocar.
+     * @param fila Fila inicial del barco.
+     * @param col Columna inicial del barco.
+     * @param horizontal Indica si el barco se coloca horizontalmente.
+     */
     public void colocarBarco(Barco barco, int fila, int col, boolean horizontal) {
         int size = barco.getSize();
         for(int i = 0; i < size; i++) {
@@ -49,6 +72,12 @@ public class Tablero implements Serializable {
         }
     }
 
+    /**
+     * Coloca un barco en el tablero utilizando los datos internos del barco.
+     *  Antes de colocarlo, verifica que la posición sea válida y no se superponga con otros barcos
+     * @param barco Barco que se desea colocar
+     * @return true si el baro se coloco correctamente, false si la posicion no es valida
+     */
     public boolean colocarBarco(Barco barco) {
         int size = barco.getSize();
         int fila = barco.getInitialRow();
@@ -96,6 +125,12 @@ public class Tablero implements Serializable {
         return true;
     }
 
+    /**
+     * Procesa un disparo en la posicion indicada del tablero
+     * @param f fila del disparo
+     * @param c columa del disparo
+     * @return un valor entero que representa el resultado del disparo
+     */
     public int disparar(int f, int c) {
         Celda celda = grid[f][c];
         int estado = celda.getEstado();
@@ -132,6 +167,10 @@ public class Tablero implements Serializable {
 
     }
 
+    /**
+     * Devuelve una representación del tablero como una matriz de enteros.
+     * @return Matriz 10x10 con los estados del tablero.
+     */
     public int[][] getGrid() {
         int[][] gridInt = new int[10][10];
         for (int i = 0; i < 10; i++) {
@@ -142,6 +181,12 @@ public class Tablero implements Serializable {
         return gridInt;
     }
 
+    /**
+     * Obtiene el estado de una celda especifica
+     * @param f fila de la celda
+     * @param c columna de la celda
+     * @return Estado actual de la celda
+     */
     public int getEstado(int f, int c) {
         return grid[f][c].getEstado();
     }

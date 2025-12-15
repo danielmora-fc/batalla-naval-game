@@ -5,9 +5,18 @@ import com.example.batallanavalgame.models.Tablero;
 
 import java.util.Random;
 
+/**
+ * Implementacion del patron factory method para la creacion de barcos por la maquina
+ */
 public class IABarcoCreador extends BarcoCreador {
     private Random random = new Random();
 
+    /**
+     * Crea un barco para la maquina generado aleatoriamente
+     * @param tipo tipo de barco a crear
+     * @param tablero tablero donde se intentara colocar el barco
+     * @return el barco creado y colocado correctamente
+     */
     @Override
     public Barco crearBarco(String tipo, Tablero tablero) {
         while (true) {

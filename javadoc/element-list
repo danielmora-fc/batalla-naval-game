@@ -1,0 +1,7 @@
+module:com.example.batallanavalgame
+com.example.batallanavalgame
+com.example.batallanavalgame.controllers
+com.example.batallanavalgame.models
+com.example.batallanavalgame.models.fabrica
+com.example.batallanavalgame.services
+com.example.batallanavalgame.services.strategy

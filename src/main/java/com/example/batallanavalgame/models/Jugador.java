@@ -8,24 +8,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
+/**
+ * Representa un jugador dentro del juego de batalla naval
+ */
 public class Jugador implements Serializable {
     private static final long serialVersionUID = 1L;
+    /** Indica si el jugador es humano o controlado por la IA. */
     private boolean esHumano;
+    /** Tablero asociado al jugador */
     private Tablero tablero;
+    /** Lista de barcos que conforman la flota del jugador. */
     private List<Barco> flota;
     private transient BarcoCreador creador;
 
+    /**
+     * Contructor que crea un jugador humano o maquina
+     * @param esHumano true si el jugador es humano, false si es Ia
+     */
     public Jugador(boolean esHumano) {
         this.esHumano = esHumano;
         this.tablero = new Tablero();
         this.flota = new ArrayList<>();
         ensureCreador();
     }
+    /**
+     * Agrega un barco a la flota del jugador usando el creador correspondiente.
+     *
+     * @param tipo tipo del barco a crear
+     */
     private void agregar(String tipo) {
         Barco barco = creador.crearBarco(tipo, tablero);
         if (barco != null) flota.add(barco);
     }
-
+    /**
+     * Genera la flota inicial del jugador con la cantidad y tipos
+     * definidos por las reglas del juego.
+     */
     public void generarFlotaInicial() {
         agregar("Portaaviones");
         agregar("Submarino");
@@ -38,11 +56,22 @@ public class Jugador implements Serializable {
         agregar("Fragata");
         agregar("Fragata");
     }
-
+    /**
+     * Realiza un disparo sobre el tablero del jugador enemigo.
+     *
+     * @param enemigo jugador objetivo del disparo
+     * @param fila fila seleccionada
+     * @param col columna seleccionada
+     * @return resultado del disparo según el estado de la celda
+     */
     public int dispararA(Jugador enemigo, int fila, int col){
         return enemigo.tablero.disparar(fila, col);
     }
 
+    /**
+     * Verifica si todos los barcos han sido hundidos.
+     * @return true si toda la flota esta hundida, false en caso contrario
+     */
     public boolean todosHundidos(){
         for(Barco barco : flota){
             if(!barco.estaHundido()) {
@@ -56,6 +85,14 @@ public class Jugador implements Serializable {
     public Tablero getTablero() { return tablero; }
     public List<Barco> getFlota() { return flota; }
 
+    /**
+     * Intenta colocar un barco en el tablero del jugador
+     * @param tipo tipo del barco
+     * @param fila fila inicial
+     * @param col columna inicial
+     * @param horizontal true si el barco es horizontal y false si es vertical
+     * @return true si el barco fue colocado correctamente, false si la posicion no es valida
+     */
     public boolean colocarBarco(String tipo, int fila, int col, boolean horizontal) {
         ensureCreador();
         int size = Barco.getSizeByType(tipo);
@@ -69,6 +106,9 @@ public class Jugador implements Serializable {
         return false;
     }
 
+    /**
+     * Asegura que el creador de barcos este inicializado
+     */
     public void ensureCreador() {
         if (this.creador == null) {
             if (esHumano) {

@@ -21,19 +21,31 @@ import javafx.stage.Modality;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controlador encargado de la escena de ubicar la flota del jugador humano
+ * Permite al usuario colocar sus barcos en el tablero mediante interaccion con el mouse
+ */
 public class UbicarFlotaController {
     @FXML private GridPane gridPane;
     @FXML private Label lblBarcoActual;
     @FXML private Button btnRotar;
     @FXML private Button btnComenzar;
     @FXML private Label lblOrientacion;
-
+    /** Referencia al juego actual */
     private Juego juego;
+    /** Jugador humano que coloca la flota. */
     private Jugador jugador;
+    /** Indica si el barco actual se coloca horizontalmente. */
     private boolean horizontal = true;
+    /** Indice del barco actual */
     private int barcoActualIndex = 0;
+    /** Lista ordenada de los barcos que deben colocarse según las reglas del juego. */
     private final List<String> barcosAcolocar = List.of("Portaaviones", "Submarino", "Submarino", "Destructor", "Destructor", "Destructor", "Fragata", "Fragata", "Fragata", "Fragata");
-
+    /**
+     * Inicializa el controlador con el juego actual.
+     *
+     * @param juego instancia del juego en curso
+     */
     public void setJuego(Juego juego) {
         this.juego = juego;
         this.jugador = juego.getJugador();
@@ -41,7 +53,10 @@ public class UbicarFlotaController {
         actualizarLabel();
         actualizarOrientacion();
     }
-
+    /**
+     * Crea visualmente el tablero de 10x10 para la colocación de la flota.
+     * Asigna eventos de mouse a cada celda.
+     */
     private void inicializarTablero() {
         gridPane.getChildren().clear();
         for (int i = 0; i < 10; i++) {
@@ -56,20 +71,28 @@ public class UbicarFlotaController {
             }
         }
     }
-
+    /**
+     * Cambia la orientación del barco actual entre horizontal y vertical.
+     */
     @FXML
     private void handleRotar() {
         horizontal = !horizontal;
     }
-
+    /**
+     * Maneja el evento de clic sobre una celda del tablero.
+     * Click izquierdo: intenta colocar el barco.
+     * Click derecho: rota el barco y actualiza la previsualización.
+     *
+     * @param event evento del mouse
+     */
     @FXML
     private void handleCeldaClick(MouseEvent event) {
         if (barcoActualIndex >= barcosAcolocar.size()) return;
 
-        // Right click to rotate
+
         if (event.getButton() == MouseButton.SECONDARY) {
             horizontal = !horizontal;
-            // Update preview after rotation
+
             actualizarOrientacion();
             Rectangle rect = (Rectangle) event.getSource();
             int col = GridPane.getColumnIndex(rect);
@@ -90,7 +113,9 @@ public class UbicarFlotaController {
             actualizarLabel();
         }
     }
-
+    /**
+     * Actualiza la visualización del tablero según el estado del modelo.
+     */
     private void actualizarTablero() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
@@ -104,6 +129,11 @@ public class UbicarFlotaController {
         }
     }
 
+    /**
+     * Muestra la previsualización del barco cuando el mouse entra en una celda.
+     *
+     * @param event evento del mouse
+     */
     @FXML
     private void handleMouseEntered(MouseEvent event) {
         if (barcoActualIndex >= barcosAcolocar.size()) return;
@@ -115,13 +145,22 @@ public class UbicarFlotaController {
         showPreview(row, col);
     }
 
+    /**
+     * Restaura la vista del tablero cuando el mouse sale de una celda.
+     *
+     * @param event evento del mouse
+     */
     @FXML
     private void handleMouseExited(MouseEvent event) {
         if (barcoActualIndex >= barcosAcolocar.size()) return;
         
         actualizarTablero();
     }
-
+    /**
+     * Muestra una previsualización del barco indicando si puede colocarse correctamente o no.
+     * @param row fila inicial
+     * @param col columna inicial
+     */
     private void showPreview(int row, int col) {
         if (barcoActualIndex >= barcosAcolocar.size()) return;
         
@@ -130,7 +169,7 @@ public class UbicarFlotaController {
         
         boolean canPlace = true;
         
-        // Check if ship can be placed
+
         for (int i = 0; i < size; i++) {
             int r = row;
             int c = col;
@@ -147,7 +186,7 @@ public class UbicarFlotaController {
             }
         }
         
-        // Show preview
+
         for (int i = 0; i < size; i++) {
             int r = row;
             int c = col;
@@ -169,6 +208,9 @@ public class UbicarFlotaController {
         }
     }
 
+    /**
+     * Actualiza el texto que indica el barco que debe colocarse.
+     */
     private void actualizarLabel() {
         if (lblBarcoActual != null) {
             if (barcoActualIndex < barcosAcolocar.size()) {
@@ -182,6 +224,9 @@ public class UbicarFlotaController {
         }
     }
 
+    /**
+     * Actualiza el texto que indica la orientación actual del barco.
+     */
     private void actualizarOrientacion() {
         if (lblOrientacion != null) {
             String texto;
@@ -194,7 +239,12 @@ public class UbicarFlotaController {
             lblOrientacion.setText("Orientación: " + texto + " --> (Haz click derecho para rotar el barco)");
         }
     }
-
+    /**
+     * Cambia a la escena principal del juego una vez finalizada
+     * la colocación de la flota.
+     *
+     * @throws IOException si ocurre un error al cargar la vista
+     */
     @FXML
     private void handleComenzar() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/batallanavalgame/views/juego.fxml"));
@@ -207,11 +257,17 @@ public class UbicarFlotaController {
         stage.show();
     }
 
+    /**
+     * Se complementa con el metodo handleComenzar()
+     * @throws IOException si ocurre un error al cargar la vista
+     */
     @FXML
     private void continuar() throws IOException {
         handleComenzar();
     }
-
+    /**
+     * Muestra una ventana con la ubicación de la flota enemiga como ayuda visual antes de iniciar la partida.
+     */
     @FXML
     private void verFlotaEnemiga() {
         Stage stage = new Stage();
@@ -229,7 +285,7 @@ public class UbicarFlotaController {
         enemyGrid.setGridLinesVisible(true);
         enemyGrid.setStyle("-fx-border-color: black; -fx-border-width: 2;");
         
-        // Create 10x10 grid for enemy fleet
+
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 Rectangle rect = new Rectangle(30, 30);
@@ -240,7 +296,7 @@ public class UbicarFlotaController {
             }
         }
         
-        // Draw enemy ships on the grid
+
         Jugador maquina = juego.getMaquina();
         for (Barco barco : maquina.getFlota()) {
             int row = barco.getInitialRow();
@@ -258,10 +314,6 @@ public class UbicarFlotaController {
                 }
                 
                 if (r >= 0 && r <= 9 && c >= 0 && c <= 9) {
-                    /*
-                    Rectangle rect = (Rectangle) enemyGrid.getChildren().get(r * 10 + c);
-                    rect.setFill(Color.DARKGRAY);
-                     */
                     enemyCells[r][c].setFill(Color.DARKGRAY);
                 }
             }

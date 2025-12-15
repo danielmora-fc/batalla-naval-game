@@ -16,7 +16,15 @@ import com.example.batallanavalgame.services.PersistenceFacade;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Controlador del menu principal del juego
+ * Gestiona las acciones iniciales como iniciar nueva partida, o cargar una partida antigua
+ */
 public class MenuController {
+    /**
+     * Carga una partida previamente guardada
+     * @param event evento generado al presionar el boton "Cargar Partida"
+     */
     @FXML
     void cargarPartida(ActionEvent event) {
         try {
@@ -46,6 +54,11 @@ public class MenuController {
         }
     }
 
+    /**
+     * Inicia una nueva partida
+     * @param event evento generado al presionar el boton de "Nueva Partida"
+     * @throws IOException si ocurre un error al cargar la vista
+     */
 
     @FXML
     void iniciarPartida(ActionEvent event) throws IOException {
