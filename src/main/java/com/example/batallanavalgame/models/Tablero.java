@@ -182,6 +182,17 @@ public class Tablero implements Serializable {
     }
 
     /**
+     * Asigna manualmente el estado de una celda del tablero.
+     * Este método se usa principalmente para restaurar el tablero al cargar una partida guardada.
+     * @param f fila
+     * @param c columna
+     * @param estado estado de la celda
+     */
+    public void setEstado(int f, int c, int estado) {
+        grid[f][c].setEstado(estado);
+    }
+
+    /**
      * Obtiene el estado de una celda especifica
      * @param f fila de la celda
      * @param c columna de la celda
