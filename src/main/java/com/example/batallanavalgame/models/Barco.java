@@ -21,6 +21,13 @@ public class Barco implements Serializable {
     private int golpes = 0;
 
     /**
+     * Constructor por defecto.
+     * Se utiliza principalmente para reconstrucción de objetos desde persistencia (por ejemplo JSON).
+     */
+    public Barco() {
+    }
+
+    /**
      * Constructor que crea un barco con todos sus atributos
      * @param tipo tipo del barco
      * @param size tamaño del barco en celdas
@@ -67,4 +74,47 @@ public class Barco implements Serializable {
     public String getOrientacion() { return orientacion; }
     public int getInitialRow() { return initialRow; }
     public int getInitialCol() { return initialCol; }
+
+    /**
+     * Obtiene la cantidad de golpes recibidos por el barco.
+     * @return cantidad de golpes
+     */
+    public int getGolpes() { return golpes; }
+
+    /**
+     * Asigna la cantidad de golpes recibidos por el barco.
+     * Se usa para restaurar el progreso de una partida desde persistencia.
+     * @param golpes cantidad de golpes
+     */
+    public void setGolpes(int golpes) { this.golpes = golpes; }
+
+    /**
+     * Asigna el tipo del barco.
+     * @param tipo tipo del barco
+     */
+    public void setTipo(String tipo) { this.tipo = tipo; }
+
+    /**
+     * Asigna el tamaño del barco.
+     * @param size tamaño en celdas
+     */
+    public void setSize(int size) { this.size = size; }
+
+    /**
+     * Asigna la orientación del barco.
+     * @param orientacion orientación ("HORIZONTAL" o "VERTICAL")
+     */
+    public void setOrientacion(String orientacion) { this.orientacion = orientacion; }
+
+    /**
+     * Asigna la fila inicial del barco.
+     * @param initialRow fila inicial
+     */
+    public void setInitialRow(int initialRow) { this.initialRow = initialRow; }
+
+    /**
+     * Asigna la columna inicial del barco.
+     * @param initialCol columna inicial
+     */
+    public void setInitialCol(int initialCol) { this.initialCol = initialCol; }
 }

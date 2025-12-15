@@ -6,7 +6,6 @@ import java.io.Serializable;
  * Representa una partida del juego Batalla Naval
  */
 public class Juego implements Serializable {
-
     private static final long serialVersionUID = 1L;
     /** Jugador humano que participa en la partida */
     private Jugador humano;
@@ -27,8 +26,14 @@ public class Juego implements Serializable {
      * Constructor por defecto
      * Crea una nueva partida con un jugador humano y un jugador maquina
      */
-    public Juego(){
-        this(new Jugador(true), new Jugador(false));
+    public Juego() {
+        this.humano = new Jugador(true);
+        this.maquina = new Jugador(false);
+        this.turnoJugador = true;
+        this.juegoTerminado = false;
+        this.hundidosHumano = 0;
+        this.hundidosIA = 0;
+        this.nickname = "";
     }
 
     /**
@@ -36,13 +41,14 @@ public class Juego implements Serializable {
      * @param humano Jugador humano
      * @param maquina Jugador maquina
      */
-    public Juego(Jugador humano, Jugador maquina){
+    public Juego(Jugador humano, Jugador maquina) {
         this.humano = humano;
         this.maquina = maquina;
         this.turnoJugador = true;
         this.juegoTerminado = false;
         this.hundidosHumano = 0;
         this.hundidosIA = 0;
+        this.nickname = "";
     }
 
     /**
@@ -129,4 +135,42 @@ public class Juego implements Serializable {
     public int getHundidosIA() { return hundidosIA; }
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
+
+    /**
+     * Asigna el jugador humano de la partida.
+     * Se usa principalmente al reconstruir una partida cargada desde persistencia.
+     * @param humano jugador humano
+     */
+    public void setHumano(Jugador humano) { this.humano = humano; }
+
+    /**
+     * Asigna el jugador controlado por la máquina.
+     * Se usa principalmente al reconstruir una partida cargada desde persistencia.
+     * @param maquina jugador máquina
+     */
+    public void setMaquina(Jugador maquina) { this.maquina = maquina; }
+
+    /**
+     * Define de quién es el turno actual.
+     * @param turnoJugador true si es turno del jugador humano, false si es turno de la IA
+     */
+    public void setTurnoJugador(boolean turnoJugador) { this.turnoJugador = turnoJugador; }
+
+    /**
+     * Define si la partida ya terminó.
+     * @param juegoTerminado true si la partida terminó
+     */
+    public void setJuegoTerminado(boolean juegoTerminado) { this.juegoTerminado = juegoTerminado; }
+
+    /**
+     * Asigna el contador de barcos hundidos por el jugador humano.
+     * @param hundidosHumano número de barcos hundidos
+     */
+    public void setHundidosHumano(int hundidosHumano) { this.hundidosHumano = hundidosHumano; }
+
+    /**
+     * Asigna el contador de barcos hundidos por la IA.
+     * @param hundidosIA número de barcos hundidos
+     */
+    public void setHundidosIA(int hundidosIA) { this.hundidosIA = hundidosIA; }
 }

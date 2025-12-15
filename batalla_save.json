@@ -1,0 +1,157 @@
+{
+  "nickname" : "wadsd",
+  "turnoJugador" : true,
+  "juegoTerminado" : false,
+  "hundidosHumano" : 1,
+  "hundidosIA" : 0,
+  "humano" : {
+    "esHumano" : true,
+    "grid" : [ [ 0, 1, 1, 1, 1, 0, 0, 0, 0, 0 ], [ 0, 1, 1, 1, 0, 2, 0, 0, 0, 0 ], [ 0, 1, 1, 1, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 1, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 0, 0, 0, 0, 0, 2, 0 ], [ 0, 1, 0, 1, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] ],
+    "flota" : [ {
+      "tipo" : "Portaaviones",
+      "size" : 4,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 0,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Submarino",
+      "size" : 3,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 1,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Submarino",
+      "size" : 3,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 2,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Destructor",
+      "size" : 2,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 3,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Destructor",
+      "size" : 2,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 4,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Destructor",
+      "size" : 2,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 6,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 5,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 7,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 8,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 8,
+      "initialCol" : 3,
+      "golpes" : 0
+    } ]
+  },
+  "maquina" : {
+    "esHumano" : false,
+    "grid" : [ [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 1 ], [ 0, 0, 0, 1, 2, 0, 0, 0, 0, 1 ], [ 0, 0, 2, 3, 1, 0, 0, 0, 1, 1 ], [ 1, 1, 0, 3, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 4, 0, 0, 0, 0, 0, 0 ], [ 0, 1, 0, 1, 1, 1, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ] ],
+    "flota" : [ {
+      "tipo" : "Portaaviones",
+      "size" : 4,
+      "orientacion" : "VERTICAL",
+      "initialRow" : 0,
+      "initialCol" : 3,
+      "golpes" : 2
+    }, {
+      "tipo" : "Submarino",
+      "size" : 3,
+      "orientacion" : "VERTICAL",
+      "initialRow" : 3,
+      "initialCol" : 1,
+      "golpes" : 0
+    }, {
+      "tipo" : "Submarino",
+      "size" : 3,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 5,
+      "initialCol" : 3,
+      "golpes" : 0
+    }, {
+      "tipo" : "Destructor",
+      "size" : 2,
+      "orientacion" : "VERTICAL",
+      "initialRow" : 7,
+      "initialCol" : 6,
+      "golpes" : 0
+    }, {
+      "tipo" : "Destructor",
+      "size" : 2,
+      "orientacion" : "VERTICAL",
+      "initialRow" : 0,
+      "initialCol" : 9,
+      "golpes" : 0
+    }, {
+      "tipo" : "Destructor",
+      "size" : 2,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 2,
+      "initialCol" : 8,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 3,
+      "initialCol" : 0,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 2,
+      "initialCol" : 4,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "HORIZONTAL",
+      "initialRow" : 9,
+      "initialCol" : 9,
+      "golpes" : 0
+    }, {
+      "tipo" : "Fragata",
+      "size" : 1,
+      "orientacion" : "VERTICAL",
+      "initialRow" : 4,
+      "initialCol" : 3,
+      "golpes" : 1
+    } ]
+  }
+}

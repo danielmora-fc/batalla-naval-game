@@ -22,14 +22,26 @@ public class Jugador implements Serializable {
     private transient BarcoCreador creador;
 
     /**
+     * Constructor por defecto.
+     * Se utiliza principalmente para reconstrucción de objetos desde persistencia (por ejemplo JSON).
+     */
+    public Jugador() {
+        this(true);
+    }
+
+    /**
      * Contructor que crea un jugador humano o maquina
      * @param esHumano true si el jugador es humano, false si es Ia
      */
-    public Jugador(boolean esHumano) {
+    public Jugador(boolean esHumano, Tablero tablero, List<Barco> flota) {
         this.esHumano = esHumano;
-        this.tablero = new Tablero();
-        this.flota = new ArrayList<>();
+        this.tablero = tablero != null ? tablero : new Tablero();
+        this.flota = flota != null ? flota : new ArrayList<>();
         ensureCreador();
+    }
+
+    public Jugador(boolean esHumano) {
+        this(esHumano, null, null);
     }
     /**
      * Agrega un barco a la flota del jugador usando el creador correspondiente.
@@ -84,6 +96,34 @@ public class Jugador implements Serializable {
     public boolean esHumano() { return esHumano; }
     public Tablero getTablero() { return tablero; }
     public List<Barco> getFlota() { return flota; }
+
+    /**
+     * Define si el jugador es humano o controlado por la IA.
+     * Este setter re-inicializa el creador de barcos si es necesario.
+     * @param esHumano true si es humano, false si es IA
+     */
+    public void setEsHumano(boolean esHumano) {
+        this.esHumano = esHumano;
+        ensureCreador();
+    }
+
+    /**
+     * Asigna el tablero del jugador.
+     * Si el tablero es null, se inicializa un tablero nuevo.
+     * @param tablero tablero a asignar
+     */
+    public void setTablero(Tablero tablero) {
+        this.tablero = tablero != null ? tablero : new Tablero();
+    }
+
+    /**
+     * Asigna la flota del jugador.
+     * Si la flota es null, se inicializa una lista vacía.
+     * @param flota lista de barcos
+     */
+    public void setFlota(List<Barco> flota) {
+        this.flota = flota != null ? flota : new ArrayList<>();
+    }
 
     /**
      * Intenta colocar un barco en el tablero del jugador

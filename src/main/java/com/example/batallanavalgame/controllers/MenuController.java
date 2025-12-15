@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
@@ -28,36 +29,70 @@ public class MenuController {
     @FXML
     void cargarPartida(ActionEvent event) {
         try {
+            System.out.println("Intentando cargar partida guardada...");
             Juego juego = PersistenceFacade.loadGame();
+            
             if (juego == null) {
-                // Alert: "No hay partida guardada"
+                mostrarAlerta("Partida no encontrada", "No se encontró ninguna partida guardada.");
                 return;
             }
+            
             if (juego.estaTerminado()) {
-                // Alert: "La partida guardada ya terminó, inicia una nueva"
+                mostrarAlerta("Partida Terminada", "La partida guardada ya ha terminado.\nPor favor, inicia una nueva partida.");
                 return;
             }
 
-            juego.getHumano().ensureCreador();
-            juego.getMaquina().ensureCreador();
+            // Asegurarse de que los creadores estén inicializados
+            if (juego.getHumano() != null) {
+                juego.getHumano().ensureCreador();
+            } else {
+                throw new IllegalStateException("El jugador humano no está inicializado");
+            }
+            
+            if (juego.getMaquina() != null) {
+                juego.getMaquina().ensureCreador();
+            } else {
+                throw new IllegalStateException("El jugador máquina no está inicializado");
+            }
 
+            // Cargar la vista del juego
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/batallanavalgame/views/juego.fxml"));
             Parent root = loader.load();
             JuegoController controller = loader.getController();
             controller.setJuego(juego);
+            
+            // Cambiar a la escena del juego
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
+            
+            System.out.println("Partida cargada exitosamente");
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (Exception e) {
+            System.err.println("Error al cargar la partida: " + e.getMessage());
             e.printStackTrace();
-            // Alert: "Error cargando partida"
+            mostrarAlerta("Error al cargar partida", "No se pudo cargar la partida guardada.");
         }
     }
 
     /**
+     * Muestra una alerta al usuario
+     */
+    private void mostrarAlerta(String titulo, String mensaje) {
+        try {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(titulo);
+            alert.setHeaderText(null);
+            alert.setContentText(mensaje);
+            alert.showAndWait();
+        } catch (Exception e) {
+            System.err.println("Error al mostrar alerta: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
      * Inicia una nueva partida
      * @param event evento generado al presionar el boton de "Nueva Partida"
-     * @throws IOException si ocurre un error al cargar la vista
      */
 
     @FXML
