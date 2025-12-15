@@ -3,63 +3,68 @@ package com.example.batallanavalgame.services;
 import com.example.batallanavalgame.models.Juego;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 
 public class PersistenceFacade {
-    private static final String SAVE_FILE = "batalla_save.ser";
-    private static final String NICKNAME_FILE = "nickname.txt";
-    private static final String STATS_FILE = "stats.txt";
+    private static final Path SAVE_FILE = Paths.get("batalla_save.ser");
+    private static final Path PLAYER_FILE = Paths.get("player.txt"); // archivo plano
 
-    public static void saveGame(Juego juego) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SAVE_FILE))) {
+    // ---------- SERIALIZABLE (Juego completo) ----------
+    public static void saveGame(Juego juego) throws IOException {
+        // Guardado atómico (evita archivo corrupto si se cierra a mitad)
+        Path tmp = Paths.get(SAVE_FILE.toString() + ".tmp");
+        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(tmp))) {
             oos.writeObject(juego);
-        } catch (IOException e) {
-            System.err.println("Error saving game: " + e.getMessage());
         }
+        Files.move(tmp, SAVE_FILE, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
 
-    public static Juego loadGame() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(SAVE_FILE))) {
+    public static Juego loadGame() throws IOException, ClassNotFoundException {
+        if (!Files.exists(SAVE_FILE)) return null;
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(SAVE_FILE))) {
             return (Juego) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error loading game: " + e.getMessage());
-            return null;
         }
     }
 
-    public static void saveNickname(String nickname) {
-        try {
-            Files.write(Paths.get(NICKNAME_FILE), nickname.getBytes());
-        } catch (IOException e) {
-            System.err.println("Error saving nickname: " + e.getMessage());
-        }
+    public static boolean hasSavedGame() {
+        return Files.exists(SAVE_FILE);
     }
 
-    public static String loadNickname() {
-        try {
-            return Files.readString(Paths.get(NICKNAME_FILE));
-        } catch (IOException e) {
-            return "";
-        }
+    // ---------- ARCHIVO PLANO (nickname + hundidos) ----------
+    public static void savePlayerData(String nickname, int playerSunk, int machineSunk) throws IOException {
+        String safeName = nickname == null ? "" : nickname.trim();
+        String content =
+                "nickname=" + safeName + "\n" +
+                        "hundidosHumano=" + playerSunk + "\n" +
+                        "hundidosIA=" + machineSunk + "\n";
+        Files.writeString(PLAYER_FILE, content, StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
-    public static void saveStats(int playerSunk, int machineSunk) {
-        try {
-            String stats = playerSunk + "\n" + machineSunk + "\n";
-            Files.write(Paths.get(STATS_FILE), stats.getBytes());
-        } catch (IOException e) {
-            System.err.println("Error saving stats: " + e.getMessage());
+    public static PlayerData loadPlayerData() throws IOException {
+        if (!Files.exists(PLAYER_FILE)) return new PlayerData("", 0, 0);
+
+        String content = Files.readString(PLAYER_FILE, StandardCharsets.UTF_8);
+        String nickname = "";
+        int hh = 0, hi = 0;
+
+        for (String line : content.split("\\R")) {
+            String[] parts = line.split("=", 2);
+            if (parts.length != 2) continue;
+            switch (parts[0].trim()) {
+                case "nickname" -> nickname = parts[1].trim();
+                case "hundidosHumano" -> hh = parseIntSafe(parts[1].trim());
+                case "hundidosIA" -> hi = parseIntSafe(parts[1].trim());
+            }
         }
+        return new PlayerData(nickname, hh, hi);
     }
 
-    public static int[] loadStats() {
-        try {
-            String content = Files.readString(Paths.get(STATS_FILE));
-            String[] lines = content.trim().split("\n");
-            return new int[]{Integer.parseInt(lines[0]), Integer.parseInt(lines[1])};
-        } catch (IOException | ArrayIndexOutOfBoundsException | NumberFormatException e) {
-            return new int[]{0, 0};
-        }
+    private static int parseIntSafe(String s) {
+        try { return Integer.parseInt(s); }
+        catch (NumberFormatException e) { return 0; }
     }
+
+    public record PlayerData(String nickname, int hundidosHumano, int hundidosIA) {}
 }

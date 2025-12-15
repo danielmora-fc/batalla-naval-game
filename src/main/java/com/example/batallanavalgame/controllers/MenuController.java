@@ -21,8 +21,15 @@ public class MenuController {
     void cargarPartida(ActionEvent event) {
         try {
             Juego juego = PersistenceFacade.loadGame();
-            if (juego == null) return;
-            // Asegurar creadores de jugadores tras deserializar
+            if (juego == null) {
+                // Alert: "No hay partida guardada"
+                return;
+            }
+            if (juego.estaTerminado()) {
+                // Alert: "La partida guardada ya terminó, inicia una nueva"
+                return;
+            }
+
             juego.getHumano().ensureCreador();
             juego.getMaquina().ensureCreador();
 
@@ -32,10 +39,13 @@ public class MenuController {
             controller.setJuego(juego);
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
-        } catch (Exception e) {
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            // Alert: "Error cargando partida"
         }
     }
+
 
     @FXML
     void iniciarPartida(ActionEvent event) throws IOException {
@@ -55,7 +65,10 @@ public class MenuController {
         result.ifPresent(juego::setNickname);
 
         // Guardar stats iniciales
-        try { PersistenceFacade.saveStats(0, 0); } catch (Exception ignored) {}
+        try {
+            PersistenceFacade.savePlayerData(juego.getNickname(), 0, 0);
+        } catch (IOException ignored) {}
+
 
         juego.getMaquina().generarFlotaInicial();
         controller.setJuego(juego);
