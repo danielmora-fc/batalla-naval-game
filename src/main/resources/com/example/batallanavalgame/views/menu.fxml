@@ -3,23 +3,48 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="570.0" prefWidth="620.0" stylesheets="@styles.css" styleClass="main-background" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batallanavalgame.controllers.MenuController">
-    <children>
-        <VBox alignment="CENTER" prefHeight="574.0" prefWidth="600.0" spacing="15.0" styleClass="content-box">
+<AnchorPane prefHeight="570.0" prefWidth="620.0"
+            stylesheets="@styles.css"
+            styleClass="main-background"
+            xmlns="http://javafx.com/javafx/24.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.batallanavalgame.controllers.MenuController">
 
-        <children>
-                <Label styleClass="title" text="Batalla Naval" />
-                <Label styleClass="subtitle" text="Ubica tu flota, dispara con precisión y hunde a tu enemigo." />
-                <Label styleClass="section-title" text="Elige una opción:" />
-                <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
-                    <children>
-                        <Button mnemonicParsing="false" onAction="#iniciarPartida" styleClass="menu-button" text="Nueva Partida" />
-                        <Button mnemonicParsing="false" onAction="#cargarPartida" styleClass="menu-button" text="Cargar Partida" />
-                    </children>
-                </VBox>
-            </children>
-        </VBox>
+    <children>
+        <!-- StackPane para centrar el contenido -->
+        <StackPane AnchorPane.topAnchor="0.0"
+                   AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0">
+
+            <!-- Caja del menú -->
+            <VBox alignment="CENTER"
+                  spacing="15.0"
+                  styleClass="content-box">
+
+                <children>
+                    <Label text="Batalla Naval" styleClass="title"/>
+                    <Label text="Ubica tu flota, dispara con precisión y hunde a tu enemigo."
+                           styleClass="subtitle"/>
+                    <Label text="Elige una opción:" styleClass="section-title"/>
+
+                    <VBox alignment="TOP_CENTER" spacing="20.0">
+                        <children>
+                            <Button text="Nueva Partida"
+                                    styleClass="menu-button"
+                                    onAction="#iniciarPartida"/>
+
+                            <Button text="Cargar Partida"
+                                    styleClass="menu-button"
+                                    onAction="#cargarPartida"/>
+                        </children>
+                    </VBox>
+                </children>
+            </VBox>
+
+        </StackPane>
     </children>
 </AnchorPane>
