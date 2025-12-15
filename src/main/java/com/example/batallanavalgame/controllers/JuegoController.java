@@ -35,16 +35,27 @@ public class JuegoController {
      */
     public void setJuego(Juego juego) {
         this.juego = juego;
+
         buildGrid(gridMaquina);
         buildGrid(gridHumano);
-        drawBoards();
+
+        redrawAllBoards();
         updateUI();
+
+        if (!juego.esTurnoJugador() && !juego.estaTerminado()) {
+            machineTurn();
+        }
+
+        if (juego.estaTerminado()) {
+            showGameEndDialog();
+        }
     }
 
     /**
      * Inicializa los eventos de disparo del jugador humano.
      * Se ejecuta automáticamente al cargar la vista FXML.
      */
+
     @FXML
     public void initialize() {
         // Eventos de disparo del jugador
@@ -54,9 +65,18 @@ public class JuegoController {
             int col = (int) (e.getX() / getCellSize(gridMaquina));
             if (fila < 0 || fila > 9 || col < 0 || col > 9) return;
             int res = juego.realizarDisparo(fila, col);
-            updateEnemyCell(fila, col, res);
+
+            if (res == 4) {
+                // Hundido: repintar todo el tablero enemigo
+                redrawEnemyBoard();
+            } else {
+                // Agua o tocado: solo una celda
+                updateEnemyCell(fila, col, res);
+            }
+
             saveAll();
             updateUI();
+
             if (res == 2) { // agua -> turno IA
                 juego.cambiarTurno();
                 machineTurn();
@@ -77,9 +97,13 @@ public class JuegoController {
             int[] shot = iaStrategy.nextShot(juego.getHumano().getTablero().getGrid());
             int fila = shot[0], col = shot[1];
             int res = juego.realizarDisparo(fila, col);
-            updateHumanCell(fila, col, res);
-            saveAll();
-            updateUI();
+
+            if (res == 4) {
+                redrawHumanBoard();
+            } else {
+                updateHumanCell(fila, col, res);
+            }
+
             if (res == 2) { // agua -> cambia turno a humano
                 juego.cambiarTurno();
             }
@@ -176,13 +200,20 @@ public class JuegoController {
     private void saveAll() {
         try {
             PersistenceFacade.saveGame(juego);
-            PersistenceFacade.saveStats(juego.getHundidosHumano(), juego.getHundidosIA());
-        } catch (Exception ignored) {}
+            PersistenceFacade.savePlayerData(
+                    juego.getNickname(),
+                    juego.getHundidosHumano(),
+                    juego.getHundidosIA()
+            );
+        } catch (Exception e) {
+            System.err.println("Error guardando partida: " + e.getMessage());
+        }
     }
 
     /**
      * Actualiza la información visual de la interfaz del juego, incluyendo el nickname del jugador y las estadísticas de barcos hundidos.
      */
+
     private void updateUI() {
         if (lblNickname != null) {
             lblNickname.setText("Jugador: " + (juego.getNickname() != null ? juego.getNickname() : "Anónimo"));
@@ -213,4 +244,68 @@ public class JuegoController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void redrawAllBoards() {
+        // 1) Limpia ambos grids a “vacío”
+        clearGrid(gridHumano);
+        clearGrid(gridMaquina);
+
+        // 2) Dibuja tablero humano: barcos + disparos de la IA
+        Tablero th = juego.getHumano().getTablero();
+        for (int f = 0; f < 10; f++) {
+            for (int c = 0; c < 10; c++) {
+                int st = th.getEstado(f, c);
+                if (st == 1) colorCell(gridHumano, f, c, Color.GRAY);     // barcos humanos visibles
+                else if (st == 2) colorCell(gridHumano, f, c, Color.BLUE); // agua
+                else if (st == 3) colorCell(gridHumano, f, c, Color.RED);  // tocado
+                else if (st == 4) colorCell(gridHumano, f, c, Color.BLACK);// hundido
+            }
+        }
+
+        // 3) Dibuja tablero máquina: SOLO lo que el humano ya disparó (2/3/4)
+        Tablero tm = juego.getMaquina().getTablero();
+        for (int f = 0; f < 10; f++) {
+            for (int c = 0; c < 10; c++) {
+                int st = tm.getEstado(f, c);
+                if (st == 2) colorCell(gridMaquina, f, c, Color.BLUE);
+                else if (st == 3) colorCell(gridMaquina, f, c, Color.RED);
+                else if (st == 4) colorCell(gridMaquina, f, c, Color.BLACK);
+                // st == 1 (barco de la máquina) NO se pinta para no hacer trampa
+            }
+        }
+    }
+
+    private void clearGrid(GridPane grid) {
+        // OJO: esto asume que los hijos son Rectangles y que buildGrid ya los creó
+        for (var node : grid.getChildren()) {
+            Rectangle r = (Rectangle) node;
+            r.setFill(Color.TRANSPARENT);
+            r.setStroke(Color.LIGHTGRAY);
+        }
+    }
+    private void redrawEnemyBoard() {
+        Tablero tm = juego.getMaquina().getTablero();
+        for (int f = 0; f < 10; f++) {
+            for (int c = 0; c < 10; c++) {
+                int st = tm.getEstado(f, c);
+                if (st == 2) colorCell(gridMaquina, f, c, Color.BLUE);
+                else if (st == 3) colorCell(gridMaquina, f, c, Color.RED);
+                else if (st == 4) colorCell(gridMaquina, f, c, Color.BLACK);
+                // NO pintes st == 1 (barcos vivos de la máquina)
+            }
+        }
+    }
+
+    private void redrawHumanBoard() {
+        Tablero th = juego.getHumano().getTablero();
+        for (int f = 0; f < 10; f++) {
+            for (int c = 0; c < 10; c++) {
+                int st = th.getEstado(f, c);
+                if (st == 1) colorCell(gridHumano, f, c, Color.GRAY);
+                else if (st == 2) colorCell(gridHumano, f, c, Color.BLUE);
+                else if (st == 3) colorCell(gridHumano, f, c, Color.RED);
+                else if (st == 4) colorCell(gridHumano, f, c, Color.BLACK);
+            }
+        }
+    }
+
 }
